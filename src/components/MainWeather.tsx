@@ -1,32 +1,77 @@
-const MainWeather = () => {
+type WeatherData = {
+  name: string;
+  sys: {
+    country: string;
+  };
+  main: {
+    temp: number;
+    temp_min: number;
+    temp_max: number;
+    humidity: number;
+    feels_like: number;
+  };
+  weather: {
+    main: string;
+    description: string;
+    icon: string;
+  }[];
+  wind: {
+    speed: number;
+  };
+};
+
+type MainWeatherProps = {
+  weatherData: WeatherData | null;
+};
+
+const MainWeather = ({ weatherData }: MainWeatherProps) => {
+  if (!weatherData) {
+    return (
+      <div className="DefaultContainer">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+  const iconCode = weatherData.weather[0].icon;
+  const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
   return (
     <div className="DefaultContainer">
       <div className="flex flex-row items-center">
         <i className="fa-solid fa-location-dot text-[clamp(1rem,3vw,3rem)]"></i>
-        <h1 className="ml-3 text-[clamp(1.5rem,4vw,3rem)]">Thailand</h1>
+        <h1 className="ml-3 text-[clamp(1.5rem,4vw,3rem)]">
+          {weatherData.name}, {weatherData.sys.country}
+        </h1>
       </div>
-      <i className="fa-regular fa-sun text-[clamp(4rem,10vw,10rem)]"></i>
-      <h2 className="text-[clamp(4rem,10vw,10rem)]">72°</h2>
-      <p className="text-[clamp(1rem,2vw,4rem)]">Sunny</p>
+      <img
+        src={iconUrl}
+        alt={weatherData.weather[0].description}
+        className="w-30 sm:w-40 md:w-50 lg:w-55 h-30 sm:h-40 md:h-50 lg:h-55"
+      />
+      <h2 className="text-[clamp(4rem,10vw,10rem)]">
+        {Math.round(weatherData.main.temp)}°
+      </h2>
+      <p className="text-[clamp(1rem,2vw,4rem)]">
+        {weatherData.weather[0].main}
+      </p>
       <div className="flex flex-row text-xs md:text-sm lg:text-lg transition-all duration-150 ease-out">
-        <p>H:75°</p>
-        <p>L:58°</p>
+        <p>H:{Math.round(weatherData.main.temp_max)}°</p>
+        <p>L:{Math.round(weatherData.main.temp_min)}°</p>
       </div>
       <div className="MainWeatherCardsContainer">
         <div className="MainWeatherInfoCard">
           <i className="fa-solid fa-droplet"></i>
           <p>Humidity</p>
-          <p>65%</p>
+          <p>{weatherData.main.humidity}%</p>
         </div>
         <div className="MainWeatherInfoCard">
-          <i className="fa-solid fa-droplet"></i>
-          <p>Humidity</p>
-          <p>65%</p>
+          <i className="fa-solid fa-wind"></i>
+          <p>Wind</p>
+          <p>{weatherData.wind.speed} m/s</p>
         </div>
         <div className="MainWeatherInfoCard">
-          <i className="fa-solid fa-droplet"></i>
-          <p>Humidity</p>
-          <p>65%</p>
+          <i className="fa-solid fa-temperature-high"></i>
+          <p>Feels like</p>
+          <p>{Math.round(weatherData.main.feels_like)}°</p>
         </div>
       </div>
     </div>
