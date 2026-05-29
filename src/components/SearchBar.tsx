@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type SearchBarProps = {
-  setCity: React.Dispatch<React.SetStateAction<string>>;
+  setCity: (city: string) => void;
 };
 
 const SearchBar = ({ setCity }: SearchBarProps) => {

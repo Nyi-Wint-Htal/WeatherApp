@@ -1,5 +1,17 @@
+type ForecastItem = {
+  dt_txt: string;
+  main: {
+    temp_min: number;
+    temp_max: number;
+  };
+  weather: {
+    icon: string;
+    description: string;
+  }[];
+};
+
 type ForecastInfoCardProps = {
-  forecast: any;
+  forecast: ForecastItem;
 };
 
 const ForecastInfoCard = ({ forecast }: ForecastInfoCardProps) => {

@@ -8,37 +8,56 @@ import fetchWeatherForecast from "../services/WeatherApiFetchForecast";
 import fetchWeatherByCoord from "../services/WeatherApiFetchCoord";
 import fetchWeatherForecastByCoord from "../services/WeatherApiFetchForecastCoord";
 
+type LocationState =
+  | { type: "city"; city: string }
+  | { type: "coords"; lat: number; lon: number };
+
 const Home = () => {
-  const [city, setCity] = useState("Bangkok");
+  const [location, setLocation] = useState<LocationState>(() => {
+    const savedLocation = localStorage.getItem("weatherLocation");
+    if (savedLocation) {
+      return JSON.parse(savedLocation);
+    }
+    return { type: "city", city: "Bangkok" };
+  });
+
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
 
   useEffect(() => {
+    localStorage.setItem("weatherLocation", JSON.stringify(location));
+  }, [location]);
+  useEffect(() => {
     const loadWeather = async () => {
-      const data = await fetchWeather(city);
-      const forecastData = await fetchWeatherForecast(city);
-      setWeather(data);
-      setForecast(forecastData);
+      if (location.type === "city") {
+        const data = await fetchWeather(location.city);
+        const forecastData = await fetchWeatherForecast(location.city);
+        setWeather(data);
+        setForecast(forecastData);
+      }
+      if (location.type === "coords") {
+        const data = await fetchWeatherByCoord(location.lat, location.lon);
+        const forecastData = await fetchWeatherForecastByCoord(
+          location.lat,
+          location.lon,
+        );
+        setWeather(data);
+        setForecast(forecastData);
+      }
     };
     loadWeather();
-  }, [city]);
-  console.log(forecast);
+  }, [location]);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browswer.");
+      alert("Geolocation is not supported by your browser.");
       return;
     }
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
-
-        const weatherData = await fetchWeatherByCoord(lat, lon);
-        const forecastData = await fetchWeatherForecastByCoord(lat, lon);
-
-        setWeather(weatherData);
-        setForecast(forecastData);
+        setLocation({ type: "coords", lat: lat, lon: lon });
       },
       () => {
         alert("Unable to get your location");
@@ -48,7 +67,7 @@ const Home = () => {
 
   return (
     <main className="Home">
-      <SearchBar setCity={setCity} />
+      <SearchBar setCity={(city) => setLocation({ type: "city", city })} />
       <MainWeather weatherData={weather} />
       <Forecast forecastData={forecast} />
       <CurrentLocation onUseCurrentLocation={handleCurrentLocation} />

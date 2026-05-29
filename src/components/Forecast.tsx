@@ -1,7 +1,21 @@
 import ForecastInfoCard from "./ForecastInfoCard";
 
+type ForecastItem = {
+  dt_txt: string;
+  main: {
+    temp_min: number;
+    temp_max: number;
+  };
+  weather: {
+    icon: string;
+    description: string;
+  }[];
+};
+
 type ForecastProps = {
-  forecastData: any;
+  forecastData: {
+    list: ForecastItem[];
+  } | null;
 };
 
 const Forecast = ({ forecastData }: ForecastProps) => {
