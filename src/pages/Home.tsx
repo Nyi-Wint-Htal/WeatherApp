@@ -9,8 +9,8 @@ import fetchWeatherByCoord from "../services/WeatherApiFetchCoord";
 import fetchWeatherForecastByCoord from "../services/WeatherApiFetchForecastCoord";
 
 type LocationState =
-  | { type: "city"; city: string }
-  | { type: "coords"; lat: number; lon: number };
+  | { type: "city"; city: string; displayName: string }
+  | { type: "coords"; lat: number; lon: number; displayName?: string };
 
 type HomeProps = {
   setWeatherBg: (weatherBg: string) => void;
@@ -23,15 +23,16 @@ const Home = ({ setWeatherBg }: HomeProps) => {
       if (savedLocation) {
         return JSON.parse(savedLocation);
       }
-      return { type: "city", city: "Bangkok" };
+      return { type: "city", city: "Bangkok", displayName: "Bangkok" };
     } catch {
       alert("Local Storage Corrupted!");
+      localStorage.removeItem("weatherLocation");
+      return { type: "city", city: "Bangkok", displayName: "Bangkok" };
     }
   });
 
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
-  const [suggestionLocation, setSuggestionLocation] = useState("Bangkok");
 
   useEffect(() => {
     localStorage.setItem("weatherLocation", JSON.stringify(location));
@@ -47,6 +48,8 @@ const Home = ({ setWeatherBg }: HomeProps) => {
         }
       } catch {
         alert("City not found. Please try another city.");
+        localStorage.removeItem("weatherLocation");
+        setLocation({ type: "city", city: "Bangkok", displayName: "Bangkok" });
       }
       if (location.type === "coords") {
         const data = await fetchWeatherByCoord(location.lat, location.lon);
@@ -82,11 +85,19 @@ const Home = ({ setWeatherBg }: HomeProps) => {
   return (
     <main className="Home">
       <SearchBar
-        setCity={(city) => setLocation({ type: "city", city })}
-        setCoords={(lat, lon) => setLocation({ type: "coords", lat, lon })}
-        setCityName={setSuggestionLocation}
+        setCity={(city) =>
+          setLocation({ type: "city", city, displayName: city })
+        }
+        setCoords={(lat, lon, displayName) =>
+          setLocation({
+            type: "coords",
+            lat,
+            lon,
+            displayName,
+          })
+        }
       />
-      <MainWeather weatherData={weather} cityName={suggestionLocation} />
+      <MainWeather weatherData={weather} displayName={location.displayName} />
       <Forecast forecastData={forecast} />
       <CurrentLocation onUseCurrentLocation={handleCurrentLocation} />
     </main>

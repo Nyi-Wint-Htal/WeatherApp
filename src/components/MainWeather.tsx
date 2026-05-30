@@ -22,10 +22,10 @@ type WeatherData = {
 
 type MainWeatherProps = {
   weatherData: WeatherData | null;
-  cityName: string;
+  displayName?: string;
 };
 
-const MainWeather = ({ weatherData, cityName }: MainWeatherProps) => {
+const MainWeather = ({ weatherData, displayName }: MainWeatherProps) => {
   if (!weatherData) {
     return (
       <div className="DefaultContainer mt-25">
@@ -37,10 +37,10 @@ const MainWeather = ({ weatherData, cityName }: MainWeatherProps) => {
   const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
   return (
     <div className="DefaultContainer mt-25">
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center text-center justify-center">
         <i className="fa-solid fa-location-dot text-[clamp(1rem,3vw,3rem)] text-orange-600"></i>
         <h1 className="ml-3 text-[clamp(1.5rem,4vw,3rem)] font-semibold">
-          {cityName}, {weatherData.sys.country}
+          {displayName ?? weatherData.name}, {weatherData.sys.country}
         </h1>
       </div>
       <img

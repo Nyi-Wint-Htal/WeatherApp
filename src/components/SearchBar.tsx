@@ -11,11 +11,10 @@ type CitySuggestion = {
 
 type SearchBarProps = {
   setCity: (city: string) => void;
-  setCoords: (lat: number, lon: number) => void;
-  setCityName: (cityName: string) => void;
+  setCoords: (lat: number, lon: number, displayName: string) => void;
 };
 
-const SearchBar = ({ setCity, setCoords, setCityName }: SearchBarProps) => {
+const SearchBar = ({ setCity, setCoords }: SearchBarProps) => {
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
 
@@ -64,9 +63,7 @@ const SearchBar = ({ setCity, setCoords, setCityName }: SearchBarProps) => {
                 key={`${city.name}-${city.lat}-${city.lon}`}
                 className="flex items-center justify-start gap-x-5 hover:bg-gray-50 w-full cursor-pointer"
                 onClick={() => {
-                  console.log(city);
-                  setCoords(city.lat, city.lon);
-                  setCityName(city.name);
+                  setCoords(city.lat, city.lon, city.name);
                   setSuggestions([]);
                   setSearch("");
                 }}
