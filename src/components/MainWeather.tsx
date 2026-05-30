@@ -22,12 +22,13 @@ type WeatherData = {
 
 type MainWeatherProps = {
   weatherData: WeatherData | null;
+  cityName: string;
 };
 
-const MainWeather = ({ weatherData }: MainWeatherProps) => {
+const MainWeather = ({ weatherData, cityName }: MainWeatherProps) => {
   if (!weatherData) {
     return (
-      <div className="DefaultContainer">
+      <div className="DefaultContainer mt-25">
         <h1>Loading...</h1>
       </div>
     );
@@ -35,11 +36,11 @@ const MainWeather = ({ weatherData }: MainWeatherProps) => {
   const iconCode = weatherData.weather[0].icon;
   const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
   return (
-    <div className="DefaultContainer">
+    <div className="DefaultContainer mt-25">
       <div className="flex flex-row items-center">
         <i className="fa-solid fa-location-dot text-[clamp(1rem,3vw,3rem)] text-orange-600"></i>
         <h1 className="ml-3 text-[clamp(1.5rem,4vw,3rem)] font-semibold">
-          {weatherData.name}, {weatherData.sys.country}
+          {cityName}, {weatherData.sys.country}
         </h1>
       </div>
       <img

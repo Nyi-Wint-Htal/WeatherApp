@@ -18,15 +18,20 @@ type HomeProps = {
 
 const Home = ({ setWeatherBg }: HomeProps) => {
   const [location, setLocation] = useState<LocationState>(() => {
-    const savedLocation = localStorage.getItem("weatherLocation");
-    if (savedLocation) {
-      return JSON.parse(savedLocation);
+    try {
+      const savedLocation = localStorage.getItem("weatherLocation");
+      if (savedLocation) {
+        return JSON.parse(savedLocation);
+      }
+      return { type: "city", city: "Bangkok" };
+    } catch {
+      alert("Local Storage Corrupted!");
     }
-    return { type: "city", city: "Bangkok" };
   });
 
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState(null);
+  const [suggestionLocation, setSuggestionLocation] = useState("Bangkok");
 
   useEffect(() => {
     localStorage.setItem("weatherLocation", JSON.stringify(location));
@@ -55,7 +60,7 @@ const Home = ({ setWeatherBg }: HomeProps) => {
       }
     };
     loadWeather();
-  }, [location]);
+  }, [location, setWeatherBg]);
 
   const handleCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -76,8 +81,12 @@ const Home = ({ setWeatherBg }: HomeProps) => {
 
   return (
     <main className="Home">
-      <SearchBar setCity={(city) => setLocation({ type: "city", city })} />
-      <MainWeather weatherData={weather} />
+      <SearchBar
+        setCity={(city) => setLocation({ type: "city", city })}
+        setCoords={(lat, lon) => setLocation({ type: "coords", lat, lon })}
+        setCityName={setSuggestionLocation}
+      />
+      <MainWeather weatherData={weather} cityName={suggestionLocation} />
       <Forecast forecastData={forecast} />
       <CurrentLocation onUseCurrentLocation={handleCurrentLocation} />
     </main>
