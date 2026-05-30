@@ -14,12 +14,18 @@ body {
     @apply flex flex-col items-center justify-start w-full min-h-screen gap-y-5 my-5;
   }
   .DefaultContainer {
-    @apply w-[95%] max-w-3xl flex flex-col items-center border-2 p-3 gap-y-4;
+    @apply w-[95%] max-w-3xl flex flex-col items-center  border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,0.7)] p-3 gap-y-4 rounded-md bg-gray-200;
   }
   .MainWeatherCardsContainer {
-    @apply flex flex-row gap-x-4;
+    @apply flex flex-row w-full items-center justify-evenly;
   }
   .MainWeatherInfoCard {
-    @apply flex flex-col border-2 items-center justify-start px-3.5 sm:px-8 md:px-10 py-1.5 sm:py-4 md:py-5 transition-all duration-500 ease-out text-[clamp(0.8rem,1.5vw,3rem)] text-center;
+    @apply flex w-[30%] flex-col border-4 rounded-md items-center justify-start px-3.5 sm:px-8 md:px-10 py-1.5 sm:py-4 md:py-5 transition-all duration-500 ease-out text-[clamp(0.8rem,1.5vw,3rem)] text-center shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-90;
+  }
+  .searchBtn {
+    @apply border-4 border-black shadow-[2px_2px_0px_0px_#000] rounded-xl ml-auto px-2 py-1 hover:scale-105 hover:rounded-sm transition-all duration-300 ease-out active:scale-100 active:rounded-xl bg-orange-600 text-white text-shadow-sm/40;
+  }
+  .forecastCard {
+    @apply flex flex-col items-center gap-y-3 justify-center py-2 px-[clamp(1rem,3vw,3rem)] border-4 rounded-md w-[20%] transition-all duration-500 ease-out text-[clamp(0.8rem,1.5vw,3rem)] text-center shadow-[3px_3px_0px_0px_rgba(0,0,0,0.5)] hover:scale-105 active:scale-90 border-black;
   }
 }

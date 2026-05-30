@@ -12,7 +12,11 @@ type LocationState =
   | { type: "city"; city: string }
   | { type: "coords"; lat: number; lon: number };
 
-const Home = () => {
+type HomeProps = {
+  setWeatherBg: (weatherBg: string) => void;
+};
+
+const Home = ({ setWeatherBg }: HomeProps) => {
   const [location, setLocation] = useState<LocationState>(() => {
     const savedLocation = localStorage.getItem("weatherLocation");
     if (savedLocation) {
@@ -26,14 +30,18 @@ const Home = () => {
 
   useEffect(() => {
     localStorage.setItem("weatherLocation", JSON.stringify(location));
-  }, [location]);
-  useEffect(() => {
+
     const loadWeather = async () => {
-      if (location.type === "city") {
-        const data = await fetchWeather(location.city);
-        const forecastData = await fetchWeatherForecast(location.city);
-        setWeather(data);
-        setForecast(forecastData);
+      try {
+        if (location.type === "city") {
+          const data = await fetchWeather(location.city);
+          const forecastData = await fetchWeatherForecast(location.city);
+          setWeather(data);
+          setForecast(forecastData);
+          setWeatherBg(data.weather[0].main);
+        }
+      } catch {
+        alert("City not found. Please try another city.");
       }
       if (location.type === "coords") {
         const data = await fetchWeatherByCoord(location.lat, location.lon);
@@ -43,6 +51,7 @@ const Home = () => {
         );
         setWeather(data);
         setForecast(forecastData);
+        setWeatherBg(data.weather[0].main);
       }
     };
     loadWeather();

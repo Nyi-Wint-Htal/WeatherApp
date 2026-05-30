@@ -8,19 +8,19 @@ const SearchBar = ({ setCity }: SearchBarProps) => {
   const [search, setSearch] = useState("");
   return (
     <div className="DefaultContainer flex-row">
-      <i className="fa-solid fa-magnifying-glass" />
+      <i className="fa-solid fa-magnifying-glass text-[#61330a]" />
       <i />
       <input
         type="text"
         name="search"
         id="search"
         placeholder="Search for a city..."
-        className="ml-2 w-full focus:outline-none"
+        className="ml-2 w-full focus:outline-none text-[#61330a]"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
       <button
-        className="border-2 ml-auto px-2 py-1"
+        className="searchBtn"
         onClick={() => {
           if (search.trim()) {
             setCity(search);

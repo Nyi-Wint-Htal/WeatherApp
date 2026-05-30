@@ -26,9 +26,9 @@ const Forecast = ({ forecastData }: ForecastProps) => {
     .filter((item: any) => item.dt_txt.includes("12:00:00"))
     .slice(0, 5);
   return (
-    <div className="DefaultContainer items-start ">
-      <h1>5-Day Forecast</h1>
-      <div className="flex flex-row gap-x-3 overflow-x-auto overflow-y-hidden w-full pb-2">
+    <div className="DefaultContainer items-start font-semibold ">
+      <h1 className="text-2xl">5-Day Forecast</h1>
+      <div className="flex flex-row gap-x-3 w-full pb-2 overflow-x-auto overflow-y-visible px-2 py-3 scrollbar-none">
         {dailyForecast.map((forecast: any) => (
           <ForecastInfoCard forecast={forecast} key={forecast.dt_txt} />
         ))}
